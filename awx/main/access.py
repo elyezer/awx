@@ -1111,6 +1111,19 @@ class CredentialAccess(BaseAccess):
         return self.can_change(obj, None)
 
 
+class CredentialInputSourceAccess(BaseAccess):
+    '''
+    I can see credential input sources when:
+     - I'm a superuser (TODO: Update)
+    I can create credential input sources when:
+     - I'm a superuser (TODO: Update)
+    I can delete credential input sources when:
+     - I'm a superuser (TODO: Update)
+    '''
+
+    model = CredentialInputSource
+
+
 class TeamAccess(BaseAccess):
     '''
     I can see a team when:

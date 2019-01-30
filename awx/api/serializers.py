@@ -2780,6 +2780,37 @@ class CredentialSerializerCreate(CredentialSerializer):
         return credential
 
 
+class CredentialInputSourceSerializer(BaseSerializer):
+    source_credential_name = serializers.SerializerMethodField(
+        help_text=_('The name of the source credential.'),
+        read_only=True,
+    )
+    source_credential_type = serializers.SerializerMethodField(
+        help_text=_('The credential type of the source credential.'),
+        read_only=True,
+    )
+
+    class Meta:
+        model = CredentialInputSource
+        fields = ('input_field_name', 'target_credential',
+                  'source_credential', 'source_credential_type', 'source_credential_name')
+        extra_kwargs = {
+            'input_field_name': {'required': True},
+            'target_credential': {'read_only': True, 'required': False},
+            'source_credential': {'required': True},
+        }
+
+    def get_source_credential_name(self, obj):
+        return obj.source_credential.name
+
+    def get_source_credential_type(self, obj):
+        return obj.source_credential.credential_type.id
+
+    def create(self, validated_data):
+        validated_data['target_credential'] = self.context['request'].parser_context['kwargs']['pk']
+        super(CredentialInputSourceSerializer, self).create(validated_data)
+
+
 class UserCredentialSerializerCreate(CredentialSerializerCreate):
 
     class Meta:
